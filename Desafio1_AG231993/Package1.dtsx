@@ -11,10 +11,36 @@
   DTS:LocaleID="17418"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="1"
-  DTS:VersionGUID="{0C0CF5BC-DE83-4446-84FE-3C55769FA640}">
+  DTS:VersionBuild="30"
+  DTS:VersionGUID="{35510328-AFEB-42AB-8D2C-95653E477CB6}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Excel Connection Manager]"
+      DTS:CreationName="EXCEL"
+      DTS:DTSID="{40584D39-5837-4F63-B207-79355748D30A}"
+      DTS:ObjectName="Excel Connection Manager">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="0"
+          DTS:ConnectRetryInterval="0"
+          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.16.0;Data Source=C:\Users\kater\OneDrive\Escritorio\Proyecto_ETL_AG231993\Desafio1_AG231993\Desafio1_AG231993\Datos_Invalidos.xlsx;Extended Properties=&quot;Excel 12.0 XML;HDR=YES&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.Chinook]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{7BBCA587-82AA-4D61-BA01-E219FA4A3DB9}"
+      DTS:ObjectName="localhost.Chinook">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=Chinook;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-Package1-{7BBCA587-82AA-4D61-BA01-E219FA4A3DB9}localhost.Chinook;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
   <DTS:Variables />
   <DTS:Executables>
     <DTS:Executable
@@ -28,7 +54,1283 @@
       <DTS:Variables />
       <DTS:ObjectData>
         <pipeline
-          version="1" />
+          version="1">
+          <components>
+            <component
+              refId="Package\Tarea Flujo de datos\ChinookDB"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origen de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;7"
+              description="Origen de OLE DB"
+              name="ChinookDB"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset">[dbo].[Invoice]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT
+    il.InvoiceLineId,
+    i.InvoiceId,
+    c.CustomerId,
+    t.TrackId,
+    a.AlbumId,
+    ar.ArtistId,
+    g.GenreId,
+    mt.MediaTypeId,
+    i.InvoiceDate,
+    i.BillingCountry,
+    il.UnitPrice,
+    il.Quantity,
+    il.UnitPrice * il.Quantity AS TotalLinea,
+    i.Total AS TotalFactura
+FROM InvoiceLine il
+JOIN Invoice i ON il.InvoiceId = i.InvoiceId
+JOIN Customer c ON i.CustomerId = c.CustomerId
+JOIN Track t ON il.TrackId = t.TrackId
+JOIN Album a ON t.AlbumId = a.AlbumId
+JOIN Artist ar ON a.ArtistId = ar.ArtistId
+JOIN Genre g ON t.GenreId = g.GenreId
+JOIN MediaType mt ON t.MediaTypeId = mt.MediaTypeId;</property>
+                <property
+                  dataType="System.String"
+                  description="Variable que contiene el comando SQL para ejecutar."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Asignaciones entre los parámetros del comando SQL y las variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Tarea Flujo de datos\ChinookDB.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.Chinook]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.Chinook]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB]"
+                  name="Salida de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[InvoiceId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceId]"
+                      name="InvoiceId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[CustomerId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[CustomerId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[CustomerId]"
+                      name="CustomerId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceDate]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[InvoiceDate]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceDate]"
+                      name="InvoiceDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[BillingCountry]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[BillingCountry]"
+                      length="40"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[BillingCountry]"
+                      name="BillingCountry"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceLineId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[InvoiceLineId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceLineId]"
+                      name="InvoiceLineId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TrackId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[TrackId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TrackId]"
+                      name="TrackId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[AlbumId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[AlbumId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[AlbumId]"
+                      name="AlbumId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[ArtistId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[ArtistId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[ArtistId]"
+                      name="ArtistId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[GenreId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[GenreId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[GenreId]"
+                      name="GenreId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[MediaTypeId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[MediaTypeId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[MediaTypeId]"
+                      name="MediaTypeId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[UnitPrice]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[UnitPrice]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[UnitPrice]"
+                      name="UnitPrice"
+                      precision="10"
+                      scale="2"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[Quantity]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[Quantity]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[Quantity]"
+                      name="Quantity"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TotalLinea]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[TotalLinea]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TotalLinea]"
+                      name="TotalLinea"
+                      precision="21"
+                      scale="2"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TotalFactura]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[TotalFactura]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TotalFactura]"
+                      name="TotalFactura"
+                      precision="10"
+                      scale="2"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[InvoiceId]"
+                      dataType="i4"
+                      name="InvoiceId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[CustomerId]"
+                      dataType="i4"
+                      name="CustomerId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[InvoiceDate]"
+                      dataType="dbTimeStamp"
+                      name="InvoiceDate" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[BillingCountry]"
+                      dataType="wstr"
+                      length="40"
+                      name="BillingCountry" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[InvoiceLineId]"
+                      dataType="i4"
+                      name="InvoiceLineId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[TrackId]"
+                      dataType="i4"
+                      name="TrackId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[AlbumId]"
+                      dataType="i4"
+                      name="AlbumId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[ArtistId]"
+                      dataType="i4"
+                      name="ArtistId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[GenreId]"
+                      dataType="i4"
+                      name="GenreId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[MediaTypeId]"
+                      dataType="i4"
+                      name="MediaTypeId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[UnitPrice]"
+                      dataType="numeric"
+                      name="UnitPrice"
+                      precision="10"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[Quantity]"
+                      dataType="i4"
+                      name="Quantity" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[TotalLinea]"
+                      dataType="numeric"
+                      name="TotalLinea"
+                      precision="21"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].ExternalColumns[TotalFactura]"
+                      dataType="numeric"
+                      name="TotalFactura"
+                      precision="10"
+                      scale="2" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB]"
+                  isErrorOut="true"
+                  name="Salida de error de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[InvoiceLineId]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[InvoiceLineId]"
+                      name="InvoiceLineId" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[InvoiceId]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[InvoiceId]"
+                      name="InvoiceId" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[CustomerId]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[CustomerId]"
+                      name="CustomerId" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[TrackId]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[TrackId]"
+                      name="TrackId" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[AlbumId]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[AlbumId]"
+                      name="AlbumId" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[ArtistId]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[ArtistId]"
+                      name="ArtistId" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[GenreId]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[GenreId]"
+                      name="GenreId" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[MediaTypeId]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[MediaTypeId]"
+                      name="MediaTypeId" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[InvoiceDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[InvoiceDate]"
+                      name="InvoiceDate" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[BillingCountry]"
+                      dataType="wstr"
+                      length="40"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[BillingCountry]"
+                      name="BillingCountry" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[UnitPrice]"
+                      dataType="numeric"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[UnitPrice]"
+                      name="UnitPrice"
+                      precision="10"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[Quantity]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[Quantity]"
+                      name="Quantity" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[TotalLinea]"
+                      dataType="numeric"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[TotalLinea]"
+                      name="TotalLinea"
+                      precision="21"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[TotalFactura]"
+                      dataType="numeric"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[TotalFactura]"
+                      name="TotalFactura"
+                      precision="10"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Tarea Flujo de datos\Columna derivada"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Columna derivada;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;0"
+              description="Crea nuevos valores de columna aplicando expresiones a las columnas de entrada de la transformación. Crea nuevas columnas o sobrescribe las columnas existentes. Por ejemplo, se concatenan los valores de las columnas 'nombre' y 'apellidos' para crear una columna 'nombre completo'."
+              name="Columna derivada"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Tarea Flujo de datos\Columna derivada.Inputs[Entrada de columna derivada]"
+                  description="Entrada en la transformación Columna derivada"
+                  name="Entrada de columna derivada">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Columna derivada.Inputs[Entrada de columna derivada].Columns[UnitPrice]"
+                      cachedDataType="numeric"
+                      cachedName="UnitPrice"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[UnitPrice]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Columna derivada.Inputs[Entrada de columna derivada].Columns[Quantity]"
+                      cachedDataType="i4"
+                      cachedName="Quantity"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[Quantity]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de columna derivada]"
+                  description="Salida predeterminada de la transformación Columna derivada"
+                  exclusionGroup="1"
+                  name="Salida de columna derivada"
+                  synchronousInputId="Package\Tarea Flujo de datos\Columna derivada.Inputs[Entrada de columna derivada]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de columna derivada].Columns[TotalLinea]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Cálculo"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de columna derivada].Columns[TotalLinea]"
+                      name="TotalLinea"
+                      precision="21"
+                      scale="2"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Expresión de columna derivada"
+                          name="Expression">#{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[UnitPrice]} * #{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[Quantity]}</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Expresión descriptiva de columna derivada"
+                          expressionType="Notify"
+                          name="FriendlyExpression">UnitPrice * Quantity</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de error de columna derivada]"
+                  description="Salida de error de la transformación Columna derivada"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de columna derivada"
+                  synchronousInputId="Package\Tarea Flujo de datos\Columna derivada.Inputs[Entrada de columna derivada]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de error de columna derivada].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de error de columna derivada].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de error de columna derivada].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de error de columna derivada].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Tarea Flujo de datos\Conversión de datos"
+              componentClassID="Microsoft.DataConvert"
+              contactInfo="Conversión de datos;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;0"
+              description="Conversión de datos"
+              name="Conversión de datos"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Tarea Flujo de datos\Conversión de datos.Inputs[Entrada de conversión de datos]"
+                  name="Entrada de conversión de datos">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Conversión de datos.Inputs[Entrada de conversión de datos].Columns[TotalLinea]"
+                      cachedDataType="numeric"
+                      cachedName="TotalLinea"
+                      cachedPrecision="21"
+                      cachedScale="2"
+                      lineageId="Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de columna derivada].Columns[TotalLinea]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Conversión de datos.Inputs[Entrada de conversión de datos].Columns[UnitPrice]"
+                      cachedDataType="numeric"
+                      cachedName="UnitPrice"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[UnitPrice]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Conversión de datos.Inputs[Entrada de conversión de datos].Columns[TotalLinea1]"
+                      cachedDataType="numeric"
+                      cachedName="TotalLinea"
+                      cachedPrecision="21"
+                      cachedScale="2"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TotalLinea]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Conversión de datos.Inputs[Entrada de conversión de datos].Columns[TotalFactura]"
+                      cachedDataType="numeric"
+                      cachedName="TotalFactura"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TotalFactura]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos]"
+                  exclusionGroup="1"
+                  name="Salida de conversión de datos"
+                  synchronousInputId="Package\Tarea Flujo de datos\Conversión de datos.Inputs[Entrada de conversión de datos]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of Columna derivada.TotalLinea]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of Columna derivada.TotalLinea]"
+                      name="Copy of Columna derivada.TotalLinea"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Especifica la columna de entrada usada como origen de datos para la conversión."
+                          name="SourceInputColumnLineageID">#{Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de columna derivada].Columns[TotalLinea]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indica si la columna usa las rutinas de análisis más rápidas independientes de la configuración regional."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of UnitPrice]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of UnitPrice]"
+                      name="Copy of UnitPrice"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Especifica la columna de entrada usada como origen de datos para la conversión."
+                          name="SourceInputColumnLineageID">#{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[UnitPrice]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indica si la columna usa las rutinas de análisis más rápidas independientes de la configuración regional."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of ChinookDB.TotalLinea]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of ChinookDB.TotalLinea]"
+                      name="Copy of ChinookDB.TotalLinea"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Especifica la columna de entrada usada como origen de datos para la conversión."
+                          name="SourceInputColumnLineageID">#{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TotalLinea]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indica si la columna usa las rutinas de análisis más rápidas independientes de la configuración regional."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of TotalFactura]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of TotalFactura]"
+                      name="Copy of TotalFactura"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Especifica la columna de entrada usada como origen de datos para la conversión."
+                          name="SourceInputColumnLineageID">#{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TotalFactura]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indica si la columna usa las rutinas de análisis más rápidas independientes de la configuración regional."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de error de conversión de datos]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de conversión de datos"
+                  synchronousInputId="Package\Tarea Flujo de datos\Conversión de datos.Inputs[Entrada de conversión de datos]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de error de conversión de datos].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de error de conversión de datos].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de error de conversión de datos].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de error de conversión de datos].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Tarea Flujo de datos\Datos invalidos"
+              componentClassID="Microsoft.ExcelDestination"
+              contactInfo="Destino de Excel;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;0"
+              description="Destino de Excel"
+              name="Datos invalidos"
+              usesDispositions="true">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset">Sheet1$</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si las columnas que contienen NULL tendrán NULL insertado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica opciones para usar con la carga rápida. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Tarea Flujo de datos\Datos invalidos.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[Excel Connection Manager]"
+                  connectionManagerRefId="Package.ConnectionManagers[Excel Connection Manager]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel]"
+                  errorOrTruncationOperation="Insertar"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Entrada de destino de Excel">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[InvoiceId]"
+                      cachedDataType="i4"
+                      cachedName="InvoiceId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[InvoiceId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[CustomerId]"
+                      cachedDataType="i4"
+                      cachedName="CustomerId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[CustomerId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[CustomerId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[InvoiceDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="InvoiceDate"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[InvoiceDate]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceDate]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[BillingCountry]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="BillingCountry"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[BillingCountry]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[BillingCountry]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[InvoiceLineId]"
+                      cachedDataType="i4"
+                      cachedName="InvoiceLineId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[InvoiceLineId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceLineId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[TrackId]"
+                      cachedDataType="i4"
+                      cachedName="TrackId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[TrackId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TrackId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[AlbumId]"
+                      cachedDataType="i4"
+                      cachedName="AlbumId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[AlbumId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[AlbumId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[ArtistId]"
+                      cachedDataType="i4"
+                      cachedName="ArtistId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[ArtistId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[ArtistId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[GenreId]"
+                      cachedDataType="i4"
+                      cachedName="GenreId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[GenreId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[GenreId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[MediaTypeId]"
+                      cachedDataType="i4"
+                      cachedName="MediaTypeId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[MediaTypeId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[MediaTypeId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[Quantity]"
+                      cachedDataType="i4"
+                      cachedName="Quantity"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[Quantity]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[Quantity]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[Copy of Columna derivada.TotalLinea]"
+                      cachedDataType="cy"
+                      cachedName="Copy of Columna derivada.TotalLinea"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[TotalLinea]"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of Columna derivada.TotalLinea]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[Copy of UnitPrice]"
+                      cachedDataType="cy"
+                      cachedName="Copy of UnitPrice"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[UnitPrice]"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of UnitPrice]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].Columns[Copy of TotalFactura]"
+                      cachedDataType="cy"
+                      cachedName="Copy of TotalFactura"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[TotalFactura]"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of TotalFactura]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[InvoiceLineId]"
+                      dataType="wstr"
+                      length="255"
+                      name="InvoiceLineId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[InvoiceId]"
+                      dataType="wstr"
+                      length="255"
+                      name="InvoiceId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[CustomerId]"
+                      dataType="wstr"
+                      length="255"
+                      name="CustomerId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[TrackId]"
+                      dataType="wstr"
+                      length="255"
+                      name="TrackId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[AlbumId]"
+                      dataType="wstr"
+                      length="255"
+                      name="AlbumId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[ArtistId]"
+                      dataType="wstr"
+                      length="255"
+                      name="ArtistId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[GenreId]"
+                      dataType="wstr"
+                      length="255"
+                      name="GenreId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[MediaTypeId]"
+                      dataType="wstr"
+                      length="255"
+                      name="MediaTypeId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[InvoiceDate]"
+                      dataType="wstr"
+                      length="255"
+                      name="InvoiceDate" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[BillingCountry]"
+                      dataType="wstr"
+                      length="255"
+                      name="BillingCountry" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[UnitPrice]"
+                      dataType="wstr"
+                      length="255"
+                      name="UnitPrice" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[Quantity]"
+                      dataType="wstr"
+                      length="255"
+                      name="Quantity" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[TotalLinea]"
+                      dataType="wstr"
+                      length="255"
+                      name="TotalLinea" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel].ExternalColumns[TotalFactura]"
+                      dataType="wstr"
+                      length="255"
+                      name="TotalFactura" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Tarea Flujo de datos\Datos invalidos.Outputs[Salida de error de destino de Excel]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de destino de Excel"
+                  synchronousInputId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Outputs[Salida de error de destino de Excel].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\Datos invalidos.Outputs[Salida de error de destino de Excel].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\Datos invalidos.Outputs[Salida de error de destino de Excel].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\Datos invalidos.Outputs[Salida de error de destino de Excel].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Tarea Flujo de datos\Destino de SQL Server"
+              componentClassID="Microsoft.SQLServerDestination"
+              contactInfo="Destino de SQL Server;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;5"
+              description="Destino de SQL Server"
+              name="Destino de SQL Server"
+              version="5">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.String"
+                  description="El nombre del objeto de base de datos en el que copiar datos."
+                  expressionType="Notify"
+                  name="BulkInsertTableName">[Hechos_Ventas]</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Especifica que todas las restricciones del objeto de destino se comprueben durante la operación de copia de datos. Corresponde a la opción CHECK_CONSTRAINTS de inserción masiva."
+                  name="BulkInsertCheckConstraints">true</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el número de la primera fila para copiar. Corresponde a la opción FIRSTROW de inserción masiva."
+                  expressionType="Notify"
+                  name="BulkInsertFirstRow">-1</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Especifica que todos los desencadenadores de inserción definidos en el objeto de destino se van a ejecutar durante la copia de datos. Corresponde a la opción FIRE_TRIGGERS de inserción masiva."
+                  name="BulkInsertFireTriggers">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Corresponde a la opción KEEPIDENTITY de inserción masiva."
+                  name="BulkInsertKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si las columnas que contienen NULL tendrán NULL copiado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                  name="BulkInsertKeepNulls">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el número de la última fila para copiar. Corresponde a la opción LASTROW de inserción masiva."
+                  expressionType="Notify"
+                  name="BulkInsertLastRow">-1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el número máximo de errores de sintaxis y de compilación que pueden producirse sin que se cancele la operación de copia. Cada fila que no se puede copiar se omite y se cuenta como un error. Corresponde a la opción MAXERRORS de inserción masiva."
+                  name="BulkInsertMaxErrors">-1</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica cómo se ordenan los datos que se van a copiar. Corresponde a la opción ORDER de inserción masiva."
+                  expressionType="Notify"
+                  name="BulkInsertOrder"></property>
+                <property
+                  dataType="System.Boolean"
+                  description="Especifica que se adquiere un bloqueo de nivel de tabla durante toda la operación de copia de datos. Corresponde a la opción TABLOCK de inserción masiva."
+                  name="BulkInsertTablock">true</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica en segundos el tiempo de espera del adaptador de destino de SQL antes de desactivarse si no hay ningún dato disponible para la inserción. Un valor 0 de tiempo de espera indica que no se agotará el tiempo de espera del adaptador de destino de SQL."
+                  expressionType="Notify"
+                  name="Timeout">30</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos."
+                  name="MaxInsertCommitSize">0</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Tarea Flujo de datos\Destino de SQL Server.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.Chinook]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.Chinook]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server]"
+                  hasSideEffects="true"
+                  name="Entrada de destino de SQL Server">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[InvoiceId]"
+                      cachedDataType="i4"
+                      cachedName="InvoiceId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[InvoiceId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[CustomerId]"
+                      cachedDataType="i4"
+                      cachedName="CustomerId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[CustomerId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[CustomerId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[BillingCountry]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="BillingCountry"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[BillingCountry]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[BillingCountry]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[InvoiceLineId]"
+                      cachedDataType="i4"
+                      cachedName="InvoiceLineId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[InvoiceLineId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceLineId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[TrackId]"
+                      cachedDataType="i4"
+                      cachedName="TrackId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[TrackId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[TrackId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[AlbumId]"
+                      cachedDataType="i4"
+                      cachedName="AlbumId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[AlbumId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[AlbumId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[ArtistId]"
+                      cachedDataType="i4"
+                      cachedName="ArtistId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[ArtistId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[ArtistId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[GenreId]"
+                      cachedDataType="i4"
+                      cachedName="GenreId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[GenreId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[GenreId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[MediaTypeId]"
+                      cachedDataType="i4"
+                      cachedName="MediaTypeId"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[MediaTypeId]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[MediaTypeId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[Quantity]"
+                      cachedDataType="i4"
+                      cachedName="Quantity"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[Quantity]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[Quantity]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[Copy of UnitPrice]"
+                      cachedDataType="cy"
+                      cachedName="Copy of UnitPrice"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[UnitPrice]"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of UnitPrice]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[Copy of Columna derivada.TotalLinea]"
+                      cachedDataType="cy"
+                      cachedName="Copy of Columna derivada.TotalLinea"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[TotalLinea]"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of Columna derivada.TotalLinea]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[Copy of TotalFactura]"
+                      cachedDataType="cy"
+                      cachedName="Copy of TotalFactura"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[TotalFactura]"
+                      lineageId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos].Columns[Copy of TotalFactura]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].Columns[InvoiceDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="InvoiceDate"
+                      externalMetadataColumnId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[InvoiceDate]"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceDate]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[InvoiceId]"
+                      dataType="i4"
+                      name="InvoiceId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[CustomerId]"
+                      dataType="i4"
+                      name="CustomerId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[InvoiceDate]"
+                      dataType="dbTimeStamp"
+                      name="InvoiceDate" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[BillingCountry]"
+                      dataType="wstr"
+                      length="40"
+                      name="BillingCountry" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[InvoiceLineId]"
+                      dataType="i4"
+                      name="InvoiceLineId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[TrackId]"
+                      dataType="i4"
+                      name="TrackId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[AlbumId]"
+                      dataType="i4"
+                      name="AlbumId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[ArtistId]"
+                      dataType="i4"
+                      name="ArtistId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[GenreId]"
+                      dataType="i4"
+                      name="GenreId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[MediaTypeId]"
+                      dataType="i4"
+                      name="MediaTypeId" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[UnitPrice]"
+                      dataType="cy"
+                      name="UnitPrice" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[Quantity]"
+                      dataType="i4"
+                      name="Quantity" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[TotalLinea]"
+                      dataType="cy"
+                      name="TotalLinea" />
+                    <externalMetadataColumn
+                      refId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server].ExternalColumns[TotalFactura]"
+                      dataType="cy"
+                      name="TotalFactura" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+            </component>
+            <component
+              refId="Package\Tarea Flujo de datos\División condicional"
+              componentClassID="Microsoft.ConditionalSplit"
+              contactInfo="División condicional;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;0"
+              description="Enruta filas de datos a diferentes salidas según el contenido de los datos. Se usan condiciones (expresiones de SSIS) para especificar las filas que se van a enrutar. Por ejemplo, se usa para separar los registros que deben limpiarse de los registros listos para ser cargados o para enrutar solamente un subconjunto de registros."
+              name="División condicional"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Tarea Flujo de datos\División condicional.Inputs[Entrada de división condicional]"
+                  description="Entrada en la transformación División condicional"
+                  name="Entrada de división condicional">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\División condicional.Inputs[Entrada de división condicional].Columns[InvoiceId]"
+                      cachedDataType="i4"
+                      cachedName="InvoiceId"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\División condicional.Inputs[Entrada de división condicional].Columns[CustomerId]"
+                      cachedDataType="i4"
+                      cachedName="CustomerId"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[CustomerId]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\División condicional.Inputs[Entrada de división condicional].Columns[UnitPrice]"
+                      cachedDataType="numeric"
+                      cachedName="UnitPrice"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[UnitPrice]" />
+                    <inputColumn
+                      refId="Package\Tarea Flujo de datos\División condicional.Inputs[Entrada de división condicional].Columns[Quantity]"
+                      cachedDataType="i4"
+                      cachedName="Quantity"
+                      lineageId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[Quantity]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Tarea Flujo de datos\División condicional.Outputs[valid_rows]"
+                  description="Salida 1 de la transformación División condicional"
+                  errorOrTruncationOperation="Cálculo"
+                  errorRowDisposition="FailComponent"
+                  exclusionGroup="1"
+                  name="valid_rows"
+                  synchronousInputId="Package\Tarea Flujo de datos\División condicional.Inputs[Entrada de división condicional]"
+                  truncationRowDisposition="FailComponent">
+                  <properties>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Especifica la expresión. Esta versión de expresión usa identificadores de linaje en lugar de nombres de columna."
+                      name="Expression">![ISNULL](#{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceId]}) &amp;&amp; ![ISNULL](#{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[CustomerId]}) &amp;&amp; #{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[Quantity]} &gt; 0 &amp;&amp; #{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[UnitPrice]} &gt; 0</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Especifica la versión descriptiva de la expresión. Esta versión de expresión usa nombres de columna."
+                      expressionType="Notify"
+                      name="FriendlyExpression">!ISNULL(InvoiceId) &amp;&amp; !ISNULL(CustomerId) &amp;&amp; Quantity &gt; 0 &amp;&amp; UnitPrice &gt; 0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica la posición de la condición en la lista de condiciones que evalúa la transformación. El orden de evaluación es del menor al mayor valor."
+                      name="EvaluationOrder">0</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Tarea Flujo de datos\División condicional.Outputs[null_rows]"
+                  description="Salida 2 de la transformación División condicional"
+                  errorOrTruncationOperation="Cálculo"
+                  errorRowDisposition="FailComponent"
+                  exclusionGroup="1"
+                  name="null_rows"
+                  synchronousInputId="Package\Tarea Flujo de datos\División condicional.Inputs[Entrada de división condicional]"
+                  truncationRowDisposition="FailComponent">
+                  <properties>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Especifica la expresión. Esta versión de expresión usa identificadores de linaje en lugar de nombres de columna."
+                      name="Expression">[ISNULL](#{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[InvoiceId]}) || [ISNULL](#{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[CustomerId]}) || #{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[Quantity]} &lt;= 0 || #{Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB].Columns[UnitPrice]} &lt;= 0</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Especifica la versión descriptiva de la expresión. Esta versión de expresión usa nombres de columna."
+                      expressionType="Notify"
+                      name="FriendlyExpression">ISNULL(InvoiceId) || ISNULL(CustomerId) || Quantity &lt;= 0 || UnitPrice &lt;= 0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica la posición de la condición en la lista de condiciones que evalúa la transformación. El orden de evaluación es del menor al mayor valor."
+                      name="EvaluationOrder">1</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Tarea Flujo de datos\División condicional.Outputs[Salida predeterminada de división condicional]"
+                  description="Salida predeterminada de la transformación División condicional"
+                  exclusionGroup="1"
+                  name="Salida predeterminada de división condicional"
+                  synchronousInputId="Package\Tarea Flujo de datos\División condicional.Inputs[Entrada de división condicional]">
+                  <properties>
+                    <property
+                      dataType="System.Boolean"
+                      name="IsDefaultOut">true</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Tarea Flujo de datos\División condicional.Outputs[Salida de error de división condicional]"
+                  description="Salida de error de la transformación División condicional"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de división condicional"
+                  synchronousInputId="Package\Tarea Flujo de datos\División condicional.Inputs[Entrada de división condicional]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\División condicional.Outputs[Salida de error de división condicional].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\División condicional.Outputs[Salida de error de división condicional].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Tarea Flujo de datos\División condicional.Outputs[Salida de error de división condicional].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Tarea Flujo de datos\División condicional.Outputs[Salida de error de división condicional].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Tarea Flujo de datos.Paths[null_rows]"
+              endId="Package\Tarea Flujo de datos\Datos invalidos.Inputs[Entrada de destino de Excel]"
+              name="null_rows"
+              startId="Package\Tarea Flujo de datos\División condicional.Outputs[null_rows]" />
+            <path
+              refId="Package\Tarea Flujo de datos.Paths[Salida de columna derivada]"
+              endId="Package\Tarea Flujo de datos\Conversión de datos.Inputs[Entrada de conversión de datos]"
+              name="Salida de columna derivada"
+              startId="Package\Tarea Flujo de datos\Columna derivada.Outputs[Salida de columna derivada]" />
+            <path
+              refId="Package\Tarea Flujo de datos.Paths[Salida de conversión de datos]"
+              endId="Package\Tarea Flujo de datos\División condicional.Inputs[Entrada de división condicional]"
+              name="Salida de conversión de datos"
+              startId="Package\Tarea Flujo de datos\Conversión de datos.Outputs[Salida de conversión de datos]" />
+            <path
+              refId="Package\Tarea Flujo de datos.Paths[Salida de origen de OLE DB]"
+              endId="Package\Tarea Flujo de datos\Columna derivada.Inputs[Entrada de columna derivada]"
+              name="Salida de origen de OLE DB"
+              startId="Package\Tarea Flujo de datos\ChinookDB.Outputs[Salida de origen de OLE DB]" />
+            <path
+              refId="Package\Tarea Flujo de datos.Paths[valid_rows]"
+              endId="Package\Tarea Flujo de datos\Destino de SQL Server.Inputs[Entrada de destino de SQL Server]"
+              name="valid_rows"
+              startId="Package\Tarea Flujo de datos\División condicional.Outputs[valid_rows]" />
+          </paths>
+        </pipeline>
       </DTS:ObjectData>
     </DTS:Executable>
   </DTS:Executables>
@@ -51,5 +1353,209 @@
       </GraphLayout>
     </LayoutInfo>
   </Package>
+  <TaskHost
+    design-time-name="Package\Tarea Flujo de datos">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="131.333333333334,42.6666666666667"
+          Id="Package\Tarea Flujo de datos\ChinookDB"
+          TopLeft="71.4999980330468,24.1666661103567" />
+        <NodeLayout
+          Size="164,42.6666666666667"
+          Id="Package\Tarea Flujo de datos\Columna derivada"
+          TopLeft="333.999990046025,26.6666658719381" />
+        <EdgeLayout
+          Id="Package\Tarea Flujo de datos.Paths[Salida de origen de OLE DB]"
+          TopLeft="202.83333136638,46.7499993244807">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="131.166658679644,0"
+              Start="0,0"
+              End="123.666658679644,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="123.666658679644,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="174.666666666667,42.6666666666667"
+          Id="Package\Tarea Flujo de datos\Conversión de datos"
+          TopLeft="331.333323458831,127.999996185303" />
+        <EdgeLayout
+          Id="Package\Tarea Flujo de datos.Paths[Salida de columna derivada]"
+          TopLeft="417.333323419094,69.3333325386048">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6666636466981"
+              Start="0,0"
+              End="0,51.1666636466981">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1666636466981" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="172,42.6666666666667"
+          Id="Package\Tarea Flujo de datos\División condicional"
+          TopLeft="330.666656812032,207.999993801117" />
+        <EdgeLayout
+          Id="Package\Tarea Flujo de datos.Paths[Salida de conversión de datos]"
+          TopLeft="417.666656802098,170.66666285197">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,37.3333309491476"
+              Start="0,0"
+              End="0,29.8333309491476">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.8333309491476" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="150.666666666667,42.6666666666667"
+          Id="Package\Tarea Flujo de datos\Datos invalidos"
+          TopLeft="448.833324591319,316.833328525225" />
+        <EdgeLayout
+          Id="Package\Tarea Flujo de datos.Paths[null_rows]"
+          TopLeft="443.999990145366,250.666660467784">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="80.1666677792866,66.1666680574417"
+              Start="0,0"
+              End="80.1666677792866,58.6666680574417">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.8325658481791" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22.8325658481791"
+                    Point2="0,26.8325658481791"
+                    Point3="4,26.8325658481791" />
+                  <mssgle:LineSegment
+                    End="76.1666677792866,26.8325658481791" />
+                  <mssgle:CubicBezierSegment
+                    Point1="76.1666677792866,26.8325658481791"
+                    Point2="80.1666677792866,26.8325658481791"
+                    Point3="80.1666677792866,30.8325658481791" />
+                  <mssgle:LineSegment
+                    End="80.1666677792866,58.6666680574417" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="18.4541346708933,31.8325658481791,43.2583984375,11.0625"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="185.333333333334,42.6666666666667"
+          Id="Package\Tarea Flujo de datos\Destino de SQL Server"
+          TopLeft="218.166666587194,316.166663666566" />
+        <EdgeLayout
+          Id="Package\Tarea Flujo de datos.Paths[valid_rows]"
+          TopLeft="389.333323478699,250.666660467784">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-78.4999902248385,65.5000031987826"
+              Start="0,0"
+              End="-78.4999902248385,58.0000031987826">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.562213278769" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22.562213278769"
+                    Point2="0,26.562213278769"
+                    Point3="-4,26.562213278769" />
+                  <mssgle:LineSegment
+                    End="-74.4999902248385,26.562213278769" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-74.4999902248385,26.562213278769"
+                    Point2="-78.4999902248385,26.562213278769"
+                    Point3="-78.4999902248385,30.562213278769" />
+                  <mssgle:LineSegment
+                    End="-78.4999902248385,58.0000031987826" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-63.4965771436693,31.562213278769,48.4931640625,11.0625"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Tarea Flujo de datos\ChinookDB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Tarea Flujo de datos\Datos invalidos">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Tarea Flujo de datos\Destino de SQL Server">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
 </Objects>]]></DTS:DesignTimeProperties>
 </DTS:Executable>
